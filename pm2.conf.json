@@ -1,0 +1,8 @@
+{
+  "name": "github-trending",
+  "script": "./server.cjs.js",
+  "cwd": "./dist",
+  "watch": false,
+  "ignore_watch": ["node_modules", "log"],
+  "error_file": "/var/log/pm2/github-trending_error.log"
+}
