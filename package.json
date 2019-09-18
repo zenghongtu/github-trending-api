@@ -99,9 +99,7 @@
     ]
   },
   "husky": {
-    "hooks": {
-      "pre-commit": "yarn validate && lint-staged"
-    }
+    "hooks": {}
   },
   "prettier": {
     "singleQuote": true,
