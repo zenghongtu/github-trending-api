@@ -1,14 +1,12 @@
 import fetch from 'node-fetch';
+import { fetchRepositories, fetchDevelopers } from '../fetch';
 import mockRepositories from '../mockData/repositories';
 import mockDevelopers from '../mockData/developers';
-import { fetchRepositories, fetchDevelopers } from '../fetch';
 
 jest.mock('node-fetch');
 
-const mockedFetch = (fetch as unknown) as jest.Mock;
-
 describe('fetchRepositories()', () => {
-  mockedFetch.mockReturnValueOnce({
+  fetch.mockReturnValueOnce({
     text: jest.fn().mockReturnValue(mockRepositories),
   });
 
@@ -18,7 +16,7 @@ describe('fetchRepositories()', () => {
 });
 
 describe('fetchDevelopers()', () => {
-  mockedFetch.mockReturnValueOnce({
+  fetch.mockReturnValueOnce({
     text: jest.fn().mockReturnValue(mockDevelopers),
   });
 

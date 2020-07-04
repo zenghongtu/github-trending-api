@@ -12,7 +12,7 @@
 
 <br />
 
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/huchenme/github-trending-api.svg)](https://github.com/huchenme/github-trending-api/issues)
+[![Financial Contributors on Open Collective](https://opencollective.com/github-trending-api/all/badge.svg?label=financial+contributors)](https://opencollective.com/github-trending-api) [![GitHub closed issues](https://img.shields.io/github/issues-closed/huchenme/github-trending-api.svg)](https://github.com/huchenme/github-trending-api/issues)
 [![Travis](https://img.shields.io/travis/huchenme/github-trending-api.svg)](https://travis-ci.org/huchenme/github-trending-api)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![coverage](https://img.shields.io/codecov/c/github/huchenme/github-trending-api.svg)](https://codecov.io/github/huchenme/github-trending-api)
@@ -43,13 +43,20 @@
   - [Trending Repositories](#trending-repositories)
   - [Trending Developers](#trending-developers)
   - [List Languages](#list-languages)
+  - [List Spoken Languages](#list-spoken-languages)
 - [NPM Package](#npm-package)
   - [Install](#install)
   - [Usage](#usage)
   - [API](#api)
     - [languages](#languages)
+    - [spokenLanguages](#spokenlanguages)
     - [fetchRepositories(params)](#fetchrepositoriesparams)
     - [fetchDevelopers(params)](#fetchdevelopersparams)
+- [Contributors](#contributors)
+  - [Code Contributors](#code-contributors)
+  - [Financial Contributors](#financial-contributors)
+    - [Individuals](#individuals)
+    - [Organizations](#organizations)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -70,6 +77,11 @@
 - **[SwiftHub](https://github.com/khoren93/SwiftHub)**: GitHub iOS client written in RxSwift and MVVM clean architecture.
 - **[GitNews](https://git.news)**: Trending repositories from GitHub, HackerNews & Reddit (Mobile & Desktop).
 - **[mini-github](https://github.com/kezhenxu94/mini-github)**: GitHub WeChat Mini Program (可能是全网功能最全的 GitHub 微信小程序).
+- **[StarGit](https://github.com/theArgex/stargit2.0)** ([Website](https://stargit.xyz)): Find trending repositories from GitHub. Built with Angular.
+- **[GitTouch](https://github.com/pd4d10/git-touch)** ([App Store](https://itunes.apple.com/us/app/gittouch/id1452042346), [Google Play](https://play.google.com/store/apps/details?id=io.github.pd4d10.gittouch)): Open source GitHub App built with Flutter.
+- **[lazyhub](https://github.com/ryo-ma/lazyhub)**: :octocat: lazyhub - Terminal UI Client for GitHub using gocui.
+- **[Gitrepos](https://github.com/Hyraze/gitrepos)** ([Website](https://gitrepos.now.sh)): :octocat: A simple PWA app that returns Trending Repositories & Developers from GitHub, Gitlab & HackerNews.
+- **[Trendzz](https://github.com/omarryhan/trendzz)** ([Website](https://trendzz.netlify.app)): Github trending PWA focusing on usability.
 
 ## Backers
 
@@ -97,12 +109,13 @@ Receive an array of trending repositories.
 
 **URL Endpoint:**
 
-https://github-trending-api.now.sh/repositories?language=javascript&since=weekly
+https://ghapi.huchen.dev/repositories?language=javascript&since=weekly
 
 **Parameters:**
 
-- `language`: **optional**, list trending repositories of certain programming languages, possible values are listed [here](languages.json).
+- `language`: **optional**, list trending repositories of certain programming languages, possible values are listed [here](./src/languages.json).
 - `since`: **optional**, default to `daily`, possible values: `daily`, `weekly` and `monthly`.
+- `spoken_language_code`: **optional**, list trending repositories of certain spoken languages (e.g English, Chinese), possible values are listed [here](./src/spoken-languages.json).
 
 **Response:**
 
@@ -140,11 +153,11 @@ Receive an array of trending developers.
 
 **URL Endpoint:**
 
-https://github-trending-api.now.sh/developers?language=javascript&since=weekly
+https://ghapi.huchen.dev/developers?language=javascript&since=weekly
 
 **Parameters:**
 
-- `language`: **optional**, list trending repositories of certain programming languages, possible values are listed [here](languages.json).
+- `language`: **optional**, list trending repositories of certain programming languages, possible values are listed [here](./src/languages.json).
 - `since`: **optional**, default to `daily`, possible values: `daily`, `weekly` and `monthly`.
 
 **Response:**
@@ -170,31 +183,58 @@ https://github-trending-api.now.sh/developers?language=javascript&since=weekly
 
 ### List Languages
 
-Receive popular languages and all languages.
-
 **URL Endpoint:**
 
-https://github-trending-api.now.sh/languages
+https://ghapi.huchen.dev/languages
 
 **Response:**
 
 ```json
 [
   {
-    "id": "1c-enterprise",
+    "urlParam": "1c-enterprise",
     "name": "1C Enterprise"
   },
   {
-    "id": "abap",
+    "urlParam": "abap",
     "name": "ABAP"
   },
   {
-    "id": "abnf",
+    "urlParam": "abnf",
     "name": "ABNF"
   },
   {
-    "id": "actionscript",
+    "urlParam": "actionscript",
     "name": "ActionScript"
+  }
+]
+```
+
+### List Spoken Languages
+
+**URL Endpoint:**
+
+https://ghapi.huchen.dev/spoken_languages
+
+**Response:**
+
+```json
+[
+  {
+    "urlParam": "ab",
+    "name": "Abkhazian"
+  },
+  {
+    "urlParam": "aa",
+    "name": "Afar"
+  },
+  {
+    "urlParam": "af",
+    "name": "Afrikaans"
+  },
+  {
+    "urlParam": "ak",
+    "name": "Akan"
   }
 ]
 ```
@@ -214,19 +254,23 @@ $ npm install --save @huchenme/github-trending
 ```js
 import {
   languages,
+  spokenLanguages,
   fetchRepositories,
   fetchDevelopers,
 } from '@huchenme/github-trending';
 
-fetchRepositories({ language: 'ruby', since: 'monthly' }).then(repositories => {
-  console.log(repositories);
-});
+fetchRepositories({ language: 'ruby', since: 'monthly' }).then(
+  (repositories) => {
+    console.log(repositories);
+  }
+);
 
-fetchDevelopers({ language: 'javascript' }).then(developers => {
+fetchDevelopers({ language: 'javascript' }).then((developers) => {
   console.log(developers);
 });
 
 console.log(languages);
+console.log(spokenLanguages);
 ```
 
 ### API
@@ -238,20 +282,45 @@ List all languages
 ```js
 [
   {
-    id: '1c-enterprise',
+    urlParam: '1c-enterprise',
     name: '1C Enterprise',
   },
   {
-    id: 'abap',
+    urlParam: 'abap',
     name: 'ABAP',
   },
   {
-    id: 'abnf',
+    urlParam: 'abnf',
     name: 'ABNF',
   },
   {
-    id: 'actionscript',
+    urlParam: 'actionscript',
     name: 'ActionScript',
+  },
+];
+```
+
+#### spokenLanguages
+
+List all spoken languages
+
+```js
+[
+  {
+    urlParam: 'ab',
+    name: 'Abkhazian',
+  },
+  {
+    urlParam: 'aa',
+    name: 'Afar',
+  },
+  {
+    urlParam: 'af',
+    name: 'Afrikaans',
+  },
+  {
+    urlParam: 'ak',
+    name: 'Akan',
   },
 ];
 ```
@@ -262,8 +331,9 @@ Receive an array of trending repositories.
 
 **params**:
 
-- `language`: possible values are the the ones from `fetchAllLanguages()` or [just find here](./src/languages.ts).
+- `language`: possible values are the the ones from `languages` or [just find here](./src/languages.json).
 - `since`: `daily`, `weekly` or `monthly`, default to `daily`.
+- `spokenLanguageCode`: possible values are the the ones from `spokenLanguages` or [just find here](./src/spoken-languages.json).
 
 ```js
 [
@@ -297,7 +367,7 @@ Receive an array of trending developers.
 
 **params**:
 
-- `language`: possible values are the the ones from `fetchAllLanguages()` or [just find here](languages.json).
+- `language`: possible values are the the ones from `languages` or [just find here](languages.json).
 - `since`: `daily`, `weekly` or `monthly`, default to `daily`.
 
 ```js
@@ -319,6 +389,36 @@ Receive an array of trending developers.
   ...
 ]
 ```
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/huchenme/github-trending-api/graphs/contributors"><img src="https://opencollective.com/github-trending-api/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/github-trending-api/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/github-trending-api"><img src="https://opencollective.com/github-trending-api/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/github-trending-api/contribute)]
+
+<a href="https://opencollective.com/github-trending-api/organization/0/website"><img src="https://opencollective.com/github-trending-api/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/github-trending-api/organization/1/website"><img src="https://opencollective.com/github-trending-api/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/github-trending-api/organization/2/website"><img src="https://opencollective.com/github-trending-api/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/github-trending-api/organization/3/website"><img src="https://opencollective.com/github-trending-api/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/github-trending-api/organization/4/website"><img src="https://opencollective.com/github-trending-api/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/github-trending-api/organization/5/website"><img src="https://opencollective.com/github-trending-api/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/github-trending-api/organization/6/website"><img src="https://opencollective.com/github-trending-api/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/github-trending-api/organization/7/website"><img src="https://opencollective.com/github-trending-api/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/github-trending-api/organization/8/website"><img src="https://opencollective.com/github-trending-api/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/github-trending-api/organization/9/website"><img src="https://opencollective.com/github-trending-api/organization/9/avatar.svg"></a>
 
 ## License
 
