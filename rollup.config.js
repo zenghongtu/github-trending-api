@@ -2,11 +2,12 @@ import path from 'path';
 import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import resolve from 'rollup-plugin-node-resolve';
+import json from 'rollup-plugin-json';
 import pkg from './package.json';
 
-const external = id => !id.startsWith('.') && !path.isAbsolute(id);
+const external = (id) => !id.startsWith('.') && !path.isAbsolute(id);
 
-const extensions = ['.js', '.jsx', '.ts', '.tsx'];
+const extensions = ['.js', '.jsx'];
 
 const resolvePlugin = resolve({
   extensions,
@@ -20,22 +21,17 @@ const babelPlugin = babel({
 
 export default [
   {
-    input: 'src/index.ts',
+    input: 'src/index.js',
     external,
     output: [
       { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' },
     ],
     plugins: [
+      json(),
       resolvePlugin,
       babelPlugin,
       process.env.NODE_ENV === 'production' && terser(),
     ],
-  },
-  {
-    input: 'src/server.ts',
-    external,
-    output: [{ file: 'dist/server.cjs.js', format: 'cjs' }],
-    plugins: [resolvePlugin, babelPlugin],
   },
 ];

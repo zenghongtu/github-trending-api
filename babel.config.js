@@ -1,20 +1,12 @@
 module.exports = {
-  presets: [
-    [
-      '@babel/preset-env',
-      {
-        targets: {
-          node: '8',
-          browsers: '> 0.25%, not dead',
-        },
-      },
-    ],
-    '@babel/preset-typescript',
-  ],
+  presets: ['@babel/preset-env'],
   plugins: [
     'lodash',
-    '@babel/plugin-transform-runtime',
-    '@babel/proposal-class-properties',
-    '@babel/proposal-object-rest-spread',
+    [
+      '@babel/plugin-transform-runtime',
+      {
+        corejs: 3,
+      },
+    ],
   ],
 };
